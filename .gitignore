@@ -1,0 +1,172 @@
+##############################
+# OS / Editor Junk
+##############################
+.DS_Store
+Thumbs.db
+
+##############################
+# Rider / IntelliJ IDEA
+##############################
+.idea/
+*.iml
+shelf/
+workspace.xml
+modules.xml
+contentModel.xml
+projectSettingsUpdater.xml
+httpRequests/
+dataSources/
+dataSources.local.xml
+
+##############################
+# Visual Studio / VS Code
+##############################
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+##############################
+# .NET / C# Build
+##############################
+bin/
+obj/
+out/
+artifacts/
+_TestResults/
+TestResults/
+*.pidb
+*.svclog
+*.vsp
+*.vspx
+
+##############################
+# Logs / Dumps
+##############################
+*.log
+*.tlog
+*.dmp
+
+##############################
+# NuGet
+##############################
+*.nupkg
+*.snupkg
+packages/
+*.nuget.props
+*.nuget.targets
+
+##############################
+# Publish output
+##############################
+publish/
+dist/
+wwwroot/
+
+##############################
+# Temp / Cache
+##############################
+*.tmp
+*.temp
+*.cache
+*.db
+*.sqlite
+*.bak
+*.swp
+*.swo
+
+##############################
+# Other
+##############################
+node_modules/
+coverage/
+.env
+.env.*
+##############################
+# OS / Editor Junk
+##############################
+.DS_Store
+Thumbs.db
+
+##############################
+# Rider / IntelliJ IDEA
+##############################
+.idea/
+*.iml
+shelf/
+workspace.xml
+modules.xml
+contentModel.xml
+projectSettingsUpdater.xml
+httpRequests/
+dataSources/
+dataSources.local.xml
+
+##############################
+# Visual Studio / VS Code
+##############################
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+##############################
+# .NET / C# Build
+##############################
+bin/
+obj/
+out/
+artifacts/
+_TestResults/
+TestResults/
+*.pidb
+*.svclog
+*.vsp
+*.vspx
+
+##############################
+# Logs / Dumps
+##############################
+*.log
+*.tlog
+*.dmp
+
+##############################
+# NuGet
+##############################
+*.nupkg
+*.snupkg
+packages/
+*.nuget.props
+*.nuget.targets
+
+##############################
+# Publish output
+##############################
+publish/
+dist/
+wwwroot/
+
+##############################
+# Temp / Cache
+##############################
+*.tmp
+*.temp
+*.cache
+*.db
+*.sqlite
+*.bak
+*.swp
+*.swo
+
+##############################
+# Other
+##############################
+node_modules/
+coverage/
+.env
+.env.*
