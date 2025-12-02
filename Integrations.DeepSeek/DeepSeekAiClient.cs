@@ -1,5 +1,9 @@
-﻿using DeepSeek;
+﻿using System.Text.Json;
+
+using DeepSeek;
 using DeepSeek.Classes;
+
+using Integrations.DeepSeek.Contracts;
 
 namespace Integrations.DeepSeek;
 
@@ -12,19 +16,16 @@ public class DeepSeekAiClient
         _client = new DeepSeekClient(apiKey);
     }
 
-    public DeepSeekAiClient(HttpClient httpClient, string apiKey)
+    public async Task<AiResponse?> Send(string userMessage)
     {
-        _client = new DeepSeekClient(httpClient, apiKey);
-    }
+        string prompt = PromptConstants.PromptMessage + userMessage;
 
-    public async Task<string> Send(string userMessage)
-    {
         var request = new ChatRequest
         {
             Model = Models.ModelChat,
             Messages =
             [
-                Message.NewUserMessage(userMessage)
+                Message.NewUserMessage(prompt)
             ]
         };
 
@@ -32,9 +33,11 @@ public class DeepSeekAiClient
 
         if (response?.Choices == null || response.Choices.Count == 0)
         {
-            return "No response from model";
+            return null;
         }
 
-        return response.Choices.First().Message.Content;
+        var aiResponse = JsonSerializer.Deserialize<AiResponse>(response.Choices.First().Message.Content);
+
+        return aiResponse;
     }
 }

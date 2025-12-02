@@ -1,0 +1,11 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace DomainService;
+
+public static class ServiceCollectionExtensions
+{
+    public static void AddHandlers(this IServiceCollection services)
+    {
+        services.AddScoped<SendMessageHandler>();
+    }
+}
