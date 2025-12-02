@@ -5,6 +5,11 @@ public class AiResponse
     public string ModelName { get; set; }
     public string Question { get; set; }
     public string Answer { get; set; }
+    public AiContext Context { get; set; }
+}
 
-    // public List<string> DialogueContext { get; set; }
+public class AiContext
+{
+    public string Question { get; set; }
+    public string Answer { get; set; }
 }

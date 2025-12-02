@@ -10,6 +10,7 @@ namespace Integrations.DeepSeek;
 public class DeepSeekAiClient
 {
     private readonly DeepSeekClient _client;
+    private readonly List<AiContext> _context = [];
 
     public DeepSeekAiClient(string apiKey)
     {
@@ -18,7 +19,7 @@ public class DeepSeekAiClient
 
     public async Task<AiResponse?> Send(string userMessage)
     {
-        string prompt = PromptConstants.PromptMessage + userMessage;
+        string prompt = Prompts.ResponseFormatPrompt + userMessage + Prompts.CreateContextPrompt(_context);
 
         var request = new ChatRequest
         {
@@ -37,6 +38,8 @@ public class DeepSeekAiClient
         }
 
         var aiResponse = JsonSerializer.Deserialize<AiResponse>(response.Choices.First().Message.Content);
+
+        _context.Add(aiResponse.Context);
 
         return aiResponse;
     }
