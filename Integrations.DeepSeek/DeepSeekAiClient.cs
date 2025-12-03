@@ -19,7 +19,7 @@ public class DeepSeekAiClient
 
     public async Task<AiResponse?> Send(string userMessage)
     {
-        string prompt = Prompts.ResponseFormatPrompt + userMessage + Prompts.CreateContextPrompt(_context);
+        string prompt = Prompts.ResponseFormatPrompt + userMessage + Prompts.CreateContextPrompt(_context) + Prompts.FinishChatPrompt;
 
         var request = new ChatRequest
         {
