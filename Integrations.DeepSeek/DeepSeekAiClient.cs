@@ -49,7 +49,7 @@ public class DeepSeekAiClient
         return requestDto.SystemPromptTypeDto switch
         {
             SystemPromptTypeDto.Base => Prompts.CreateBasePrompt(requestDto.UserMessage, _context),
-            SystemPromptTypeDto.Alternative => Prompts.CreateAlternativePrompt(requestDto.UserMessage, _context),
+            SystemPromptTypeDto.Analytical => Prompts.CreateAnalyticalPrompt(requestDto.UserMessage, _context),
             SystemPromptTypeDto.WithoutContext => Prompts.CreateWithoutContextPrompt(requestDto.UserMessage),
             _ => throw new ArgumentException($"Unknown prompt type: {requestDto.SystemPromptTypeDto}")
         };

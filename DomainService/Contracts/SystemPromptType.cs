@@ -3,6 +3,6 @@ namespace DomainService.Contracts;
 public enum SystemPromptType
 {
     Base,
-    Alternative,
+    Analytical,
     WithoutContext
 }

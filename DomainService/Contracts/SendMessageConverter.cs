@@ -14,7 +14,7 @@ public static class SendMessageConverter
         return systemPromptType switch
         {
             SystemPromptType.Base => SystemPromptTypeDto.Base,
-            SystemPromptType.Alternative => SystemPromptTypeDto.Alternative,
+            SystemPromptType.Analytical => SystemPromptTypeDto.Analytical,
             SystemPromptType.WithoutContext => SystemPromptTypeDto.WithoutContext,
             _ => throw new ArgumentException($"Unknown prompt type: {systemPromptType}")
         };

@@ -3,6 +3,6 @@ namespace Integrations.DeepSeek.Contracts;
 public enum SystemPromptTypeDto
 {
     Base,
-    Alternative,
+    Analytical,
     WithoutContext
 }

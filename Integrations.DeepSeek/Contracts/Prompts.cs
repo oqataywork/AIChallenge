@@ -10,9 +10,13 @@ internal static class Prompts
         return ResponseFormatPrompt + userPrompt + CreateContextPrompt(context) + FinishChatPrompt;
     }
 
-    public static string CreateAlternativePrompt(string userPrompt, List<AiContext> context)
+    public static string CreateAnalyticalPrompt(string userPrompt, List<AiContext> context)
     {
-        return ResponseFormatPrompt + userPrompt + CreateContextPrompt(context) + FinishChatPrompt;
+        return $"{ResponseFormatPrompt} "
+            + userPrompt
+            + AnalyticalModifier
+            + CreateContextPrompt(context)
+            + FinishChatPrompt;
     }
 
     public static string CreateWithoutContextPrompt(string userPrompt)
@@ -20,15 +24,20 @@ internal static class Prompts
         return ResponseFormatPrompt + userPrompt + FinishChatPrompt;
     }
 
-    public const string ResponseFormat = ""
+    private const string AnalyticalModifier =
+        "Используй аналитический режим. Давай более структурированный, логичный ответ, " +
+        "делай небольшие выводы, но всё равно заполняй только JSON из указанного формата. " +
+        "Не выходи за рамки ResponseFormat.";
+
+    private const string ResponseFormat = ""
         + "\"Question\":\"\","
         + "\"Answer\":\"\","
         + "\"IsFinished\":,"
         + "\"Context\":{\"Question\":\"\",\"Answer\":\"\"}}";
 
-    public const string Separator = "||| ";
+    private const string Separator = "||| ";
 
-    public const string ResponseFormatPrompt = $"{Separator}"
+    private const string ResponseFormatPrompt = $"{Separator}"
         + $"Отвечай только в таком формате. "
         + $"Указанный формат:{ResponseFormat} "
         + $"Не добавляй лишних слов. Только JSON из указанного формата."
@@ -37,12 +46,12 @@ internal static class Prompts
         + $"В Answer запиши ответ полученный из твоих вычислений "
         + $"В Context запиши Question и Answer, но в сжатом формате (25%) ";
 
-    public const string FinishChatPrompt = $"Если задача сложная, требующая нескольких вопросов,"
+    private const string FinishChatPrompt = $"Если задача сложная, требующая нескольких вопросов,"
         + $"а ты понял, что задача завершена, то"
         + $"в IsFinished (bool) положи true,"
         + $" если посчитаешь, что задача выполнена. Во всех остальные случаях false";
 
-    public static string CreateContextPrompt(List<AiContext> contexts)
+    private static string CreateContextPrompt(List<AiContext> contexts)
     {
         if (contexts.Count == 0)
         {
