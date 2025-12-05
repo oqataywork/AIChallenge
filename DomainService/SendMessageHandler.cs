@@ -1,4 +1,6 @@
-﻿using Integrations.DeepSeek;
+﻿using DomainService.Contracts;
+
+using Integrations.DeepSeek;
 using Integrations.DeepSeek.Contracts;
 
 namespace DomainService;
@@ -12,9 +14,11 @@ public class SendMessageHandler
         _deepSeekAiClient = deepSeekAiClient;
     }
 
-    public async Task<AiResponse?> Handle(string message)
+    public async Task<AiResponse?> Handle(SendMessageRequestInternal message)
     {
-        AiResponse? response = await _deepSeekAiClient.Send(message);
+        SendMessageRequestDto requestDto = SendMessageConverter.Convert(message);
+
+        AiResponse? response = await _deepSeekAiClient.Send(requestDto);
 
         return response;
     }

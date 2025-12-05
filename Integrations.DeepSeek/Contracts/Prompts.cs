@@ -5,6 +5,21 @@ namespace Integrations.DeepSeek.Contracts;
 
 internal static class Prompts
 {
+    public static string CreateBasePrompt(string userPrompt, List<AiContext> context)
+    {
+        return ResponseFormatPrompt + userPrompt + CreateContextPrompt(context) + FinishChatPrompt;
+    }
+
+    public static string CreateAlternativePrompt(string userPrompt, List<AiContext> context)
+    {
+        return ResponseFormatPrompt + userPrompt + CreateContextPrompt(context) + FinishChatPrompt;
+    }
+
+    public static string CreateWithoutContextPrompt(string userPrompt)
+    {
+        return ResponseFormatPrompt + userPrompt + FinishChatPrompt;
+    }
+
     public const string ResponseFormat = ""
         + "\"Question\":\"\","
         + "\"Answer\":\"\","

@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 
 using DomainService;
+using DomainService.Contracts;
 
 using Integrations.DeepSeek.Contracts;
 
@@ -21,8 +22,10 @@ public class LlmController : ControllerBase
     }
 
     [HttpPost("SendMessage")]
-    public async Task<AiResponse?> SendMessage([FromBody] SendMessageQuery message)
+    public async Task<AiResponse?> SendMessage([FromBody] SendMessageRequest request)
     {
-        return await _sendMessageHandler.Handle(message.UserMessage);
+        SendMessageRequestInternal requestInternal = SendMessageConverter.Convert(request);
+
+        return await _sendMessageHandler.Handle(requestInternal);
     }
 }

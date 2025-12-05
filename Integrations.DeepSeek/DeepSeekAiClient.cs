@@ -17,9 +17,9 @@ public class DeepSeekAiClient
         _client = new DeepSeekClient(apiKey);
     }
 
-    public async Task<AiResponse?> Send(string userMessage)
+    public async Task<AiResponse?> Send(SendMessageRequestDto requestDto)
     {
-        string prompt = Prompts.ResponseFormatPrompt + userMessage + Prompts.CreateContextPrompt(_context) + Prompts.FinishChatPrompt;
+        var prompt = GetRequestedPrompt(requestDto);
 
         var request = new ChatRequest
         {
@@ -42,5 +42,16 @@ public class DeepSeekAiClient
         _context.Add(aiResponse.Context);
 
         return aiResponse;
+    }
+
+    private string GetRequestedPrompt(SendMessageRequestDto requestDto)
+    {
+        return requestDto.SystemPromptTypeDto switch
+        {
+            SystemPromptTypeDto.Base => Prompts.CreateBasePrompt(requestDto.UserMessage, _context),
+            SystemPromptTypeDto.Alternative => Prompts.CreateAlternativePrompt(requestDto.UserMessage, _context),
+            SystemPromptTypeDto.WithoutContext => Prompts.CreateWithoutContextPrompt(requestDto.UserMessage),
+            _ => throw new ArgumentException($"Unknown prompt type: {requestDto.SystemPromptTypeDto}")
+        };
     }
 }
