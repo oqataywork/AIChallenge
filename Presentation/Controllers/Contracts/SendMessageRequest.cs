@@ -4,4 +4,5 @@ public class SendMessageRequest
 {
     public string UserMessage { get; set; }
     public string SystemPromptType { get; set; }
+    public double Temperature { get; set; }
 }

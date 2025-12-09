@@ -8,7 +8,7 @@ public static class SendMessageConverter
 {
     public static SendMessageRequestInternal Convert(SendMessageRequest message)
     {
-        return new SendMessageRequestInternal(message.UserMessage, Convert(message.SystemPromptType));
+        return new SendMessageRequestInternal(message.UserMessage, Convert(message.SystemPromptType), message.Temperature);
     }
 
     private static SystemPromptType Convert(string messageSystemPromptType)

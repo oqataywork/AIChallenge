@@ -19,7 +19,9 @@ public class DeepSeekAiClient
 
     public async Task<AiResponse?> Send(SendMessageRequestDto requestDto)
     {
-        var prompt = GetRequestedPrompt(requestDto);
+        string prompt = GetRequestedPrompt(requestDto);
+
+        prompt = prompt + "Prompt Temperature is: " + requestDto.Temperature;
 
         var request = new ChatRequest
         {
