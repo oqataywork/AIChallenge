@@ -1,3 +1,7 @@
 namespace DomainService.Contracts;
 
-public record SendMessageRequestInternal(string UserMessage, SystemPromptType SystemPromptType, double Temperature);
+public record SendMessageRequestInternal(
+    string UserMessage,
+    bool WithContext,
+    ModelType ModelType,
+    double Temperature);

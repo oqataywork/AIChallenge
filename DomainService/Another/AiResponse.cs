@@ -1,6 +1,6 @@
 ﻿namespace Integrations.DeepSeek.Contracts;
 
-public class iResponse
+public class AiResponse
 {
     public string Question { get; set; }
     public string Answer { get; set; }

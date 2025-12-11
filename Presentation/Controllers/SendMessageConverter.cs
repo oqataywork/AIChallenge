@@ -8,17 +8,22 @@ public static class SendMessageConverter
 {
     public static SendMessageRequestInternal Convert(SendMessageRequest message)
     {
-        return new SendMessageRequestInternal(message.UserMessage, Convert(message.SystemPromptType), message.Temperature);
+        return new SendMessageRequestInternal(
+            message.UserMessage,
+            message.WithContext,
+            ConvertModel(message.Model),
+            message.Temperature);
     }
 
-    private static SystemPromptType Convert(string messageSystemPromptType)
+    private static ModelType ConvertModel(string model)
     {
-        return messageSystemPromptType switch
+        return model switch
         {
-            "Base" => SystemPromptType.Base,
-            "Analytical" => SystemPromptType.Analytical,
-            "WithoutContext" => SystemPromptType.WithoutContext,
-            _ => throw new ArgumentException($"Unknown prompt type: {messageSystemPromptType}")
+            "DeepSeekChat" => ModelType.DeepSeekChat,
+            "DeepSeekReasoner" => ModelType.DeepSeekReasoner,
+            "OpenAiGpt5Nano" => ModelType.OpenAiGpt5Nano,
+            "OpenAiGpt5Dot1" => ModelType.OpenAiGpt5Dot1,
+            _ => throw new ArgumentOutOfRangeException(nameof(model), model, null)
         };
     }
 }
