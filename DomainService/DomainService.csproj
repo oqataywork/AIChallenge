@@ -11,7 +11,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Integrations.DeepSeek\Integrations.DeepSeek.csproj" />
+      <ProjectReference Include="..\Integrations\Integrations.csproj" />
+      <ProjectReference Include="..\Repository\Repository.csproj" />
     </ItemGroup>
 
 </Project>
