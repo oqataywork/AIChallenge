@@ -1,3 +1,5 @@
+using Domain;
+
 namespace DomainService.Contracts;
 
 public record SendMessageRequestInternal(

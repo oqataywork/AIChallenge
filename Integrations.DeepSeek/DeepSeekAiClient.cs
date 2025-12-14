@@ -3,57 +3,65 @@
 using DeepSeek;
 using DeepSeek.Classes;
 
-using Integrations.DeepSeek.Contracts;
+using Integrations.Contracts;
 
 namespace Integrations.DeepSeek;
 
-public class DeepSeekAiClient
+using Microsoft.Extensions.Options;
+
+public class DeepSeekAiClient : IDeepSeekAiClient
 {
     private readonly DeepSeekClient _client;
-    private readonly List<AiContext> _context = [];
 
-    public DeepSeekAiClient(string apiKey)
+    public DeepSeekAiClient(IOptions<DeepSeekOptions> options)
     {
+        string apiKey = options.Value.ApiKey;
         _client = new DeepSeekClient(apiKey);
     }
 
-    public async Task<AiResponse?> Send(SendMessageRequestDto requestDto)
+    public async Task<AiResponseDto?> SendToChat(SendMessageRequestDto requestDto, CancellationToken cancellationToken)
     {
-        string prompt = GetRequestedPrompt(requestDto);
-
-        prompt = prompt + "Prompt Temperature is: " + requestDto.Temperature;
-
         var request = new ChatRequest
         {
             Model = Models.ModelChat,
             Messages =
             [
-                Message.NewUserMessage(prompt)
+                Message.NewUserMessage(requestDto.Prompt)
             ]
         };
 
-        ChatResponse? response = await _client.ChatAsync(request);
+        ChatResponse? response = await _client.ChatAsync(request, cancellationToken);
 
         if (response?.Choices == null || response.Choices.Count == 0)
         {
             return null;
         }
 
-        var aiResponse = JsonSerializer.Deserialize<AiResponse>(response.Choices.First().Message.Content);
-
-        _context.Add(aiResponse.Context);
+        var aiResponse = JsonSerializer.Deserialize<AiResponseDto>(response.Choices.First().Message.Content);
 
         return aiResponse;
     }
 
-    private string GetRequestedPrompt(SendMessageRequestDto requestDto)
+    public async Task<AiResponseDto?> SendToReasoner(SendMessageRequestDto requestDto, CancellationToken cancellationToken)
     {
-        return requestDto.SystemPromptTypeDto switch
+        var request = new ChatRequest
         {
-            SystemPromptTypeDto.Base => Prompts.CreateBasePrompt(requestDto.UserMessage, _context),
-            SystemPromptTypeDto.Analytical => Prompts.CreateAnalyticalPrompt(requestDto.UserMessage, _context),
-            SystemPromptTypeDto.WithoutContext => Prompts.CreateWithoutContextPrompt(requestDto.UserMessage),
-            _ => throw new ArgumentException($"Unknown prompt type: {requestDto.SystemPromptTypeDto}")
+            Model = Models.ModelReasoner,
+            Messages =
+            [
+                Message.NewUserMessage(requestDto.Prompt)
+            ]
         };
+
+        ChatResponse? response = await _client.ChatAsync(request, cancellationToken);
+
+        if (response?.Choices == null || response.Choices.Count == 0)
+        {
+            return null;
+        }
+
+        var aiResponse = JsonSerializer.Deserialize<AiResponseDto>(response.Choices.First().Message.Content);
+
+        return aiResponse;
     }
 }

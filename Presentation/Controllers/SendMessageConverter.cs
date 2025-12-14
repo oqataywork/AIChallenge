@@ -1,3 +1,5 @@
+using Domain;
+
 using DomainService.Contracts;
 
 using Presentation.Controllers.Contracts;
@@ -13,6 +15,11 @@ public static class SendMessageConverter
             message.WithContext,
             ConvertModel(message.Model),
             message.Temperature);
+    }
+
+    public static SendMessageResponse Convert(AiResponse response)
+    {
+        return new SendMessageResponse(response.Answer, response.IsFinished);
     }
 
     private static ModelType ConvertModel(string model)

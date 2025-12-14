@@ -1,9 +1,7 @@
-﻿using System.Text.Json;
+﻿using Domain;
 
-using DomainService;
 using DomainService.Contracts;
-
-using Integrations.DeepSeek.Contracts;
+using DomainService.Services;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,10 +20,12 @@ public class LlmController : ControllerBase
     }
 
     [HttpPost("SendMessage")]
-    public async Task<AiResponse?> SendMessage([FromBody] SendMessageRequest request)
+    public async Task<SendMessageResponse> SendMessage([FromBody] SendMessageRequest request, CancellationToken cancellationToken)
     {
         SendMessageRequestInternal requestInternal = SendMessageConverter.Convert(request);
 
-        return await _sendMessageHandler.Handle(requestInternal);
+        AiResponse response = await _sendMessageHandler.Handle(requestInternal, cancellationToken);
+
+        return SendMessageConverter.Convert(response);
     }
 }

@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DomainService.Contracts;
+using DomainService.Services;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DomainService;
 
@@ -7,5 +10,7 @@ public static class ServiceCollectionExtensions
     public static void AddHandlers(this IServiceCollection services)
     {
         services.AddScoped<SendMessageHandler>();
+        services.AddScoped<MessageSender>();
+        services.AddScoped<IPromptBuilder, PromptBuilder>();
     }
 }

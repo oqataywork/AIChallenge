@@ -1,4 +1,4 @@
-﻿namespace DomainService.Contracts;
+﻿namespace Domain;
 
 public enum ModelType
 {
