@@ -5,6 +5,7 @@ using DomainService;
 using Infrastructure;
 
 using Integrations.DeepSeek;
+using Integrations.OgMcpClient;
 using Integrations.OpenAI;
 
 using Npgsql;
@@ -45,6 +46,7 @@ public class Startup
 
     private static void AddExternalClients(IServiceCollection services)
     {
+        services.AddOgMcpClient();
         services.AddDeepSeek();
         services.AddOpenAi();
     }

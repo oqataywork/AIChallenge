@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-using Infrastructure.Context;
+﻿using Infrastructure.Context;
 
 using Microsoft.Extensions.DependencyInjection;
 

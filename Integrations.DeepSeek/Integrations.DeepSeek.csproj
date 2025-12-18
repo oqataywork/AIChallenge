@@ -2,15 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="DeepSeek.NET" Version="1.2.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.0" />
-    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Integrations\Integrations.csproj" />

@@ -3,19 +3,16 @@
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2"/>
-        <PackageReference Include="Npgsql" Version="10.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\DomainService\DomainService.csproj"/>
-        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj"/>
         <ProjectReference Include="..\Integrations.DeepSeek\Integrations.DeepSeek.csproj"/>
-        <ProjectReference Include="..\Integrations.OpenAI\Integrations.OpenAI.csproj" />
+        <ProjectReference Include="..\Integrations.OgMcpClient\Integrations.OgMcpClient.csproj"/>
+        <ProjectReference Include="..\Integrations.OpenAI\Integrations.OpenAI.csproj"/>
     </ItemGroup>
 
 </Project>

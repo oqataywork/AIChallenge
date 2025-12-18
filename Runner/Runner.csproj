@@ -6,11 +6,5 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="DeepSeek.NET" Version="1.2.0" />
-      <PackageReference Include="Google.GenAI" Version="0.8.0" />
-      <PackageReference Include="OpenAI" Version="2.7.0" />
-    </ItemGroup>
-
+    
 </Project>
