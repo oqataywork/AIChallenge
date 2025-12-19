@@ -1,4 +1,4 @@
-﻿namespace Integrations.Contracts;
+﻿namespace Integrations.Ai.Contracts;
 
 public class AiResponseDto
 {
