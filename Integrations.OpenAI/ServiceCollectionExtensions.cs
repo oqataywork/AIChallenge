@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Integrations.Ai;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Integrations.OpenAI;
 

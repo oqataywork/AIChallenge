@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Integrations.Mcp;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using ModelContextProtocol.Client;
 
@@ -31,6 +33,7 @@ public static class ServiceCollectionExtensions
             });
 
         // Регистрируем свою обёртку
-        services.AddScoped<IOgMcpClient, OgMcpClient>();
+        services.AddScoped<IForecastMcpClient, ForecastMcpClient>();
+        services.AddScoped<IReminderMcpClient, ReminderMcpClient>();
     }
 }

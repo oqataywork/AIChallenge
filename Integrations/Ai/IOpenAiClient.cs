@@ -1,6 +1,6 @@
-﻿using Integrations.Contracts;
+﻿using Integrations.Ai.Contracts;
 
-namespace Integrations;
+namespace Integrations.Ai;
 
 public interface IOpenAiClient
 {

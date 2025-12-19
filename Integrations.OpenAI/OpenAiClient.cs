@@ -1,13 +1,14 @@
 ﻿using System.ClientModel;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 
-using Integrations.Contracts;
+using Integrations.Ai;
+using Integrations.Ai.Contracts;
+using Integrations.Mcp;
+using Integrations.Mcp.Contracts;
 
 using Microsoft.Extensions.Options;
 
 using ModelContextProtocol.Client;
-using ModelContextProtocol.Protocol;
 
 using OpenAI;
 using OpenAI.Chat;
@@ -17,11 +18,14 @@ namespace Integrations.OpenAI;
 public class OpenAiClient : IOpenAiClient
 {
     private readonly OpenAIClient _client;
-    private readonly IOgMcpClient _mcpClient;
+    private readonly IForecastMcpClient _forecastMcpClient;
+    private readonly IReminderMcpClient _reminderMcpClient;
 
-    public OpenAiClient(IOptions<OpenAiOptions> options, IOgMcpClient mcpClient)
+    public OpenAiClient(IOptions<OpenAiOptions> options, IForecastMcpClient forecastMcpClient, IReminderMcpClient reminderMcpClient)
     {
-        _mcpClient = mcpClient;
+        _forecastMcpClient = forecastMcpClient;
+        _reminderMcpClient = reminderMcpClient;
+
         string apiKey = options.Value.ApiKey;
         _client = new OpenAIClient(apiKey);
     }
@@ -46,10 +50,10 @@ public class OpenAiClient : IOpenAiClient
     {
         ChatClient chatClient = _client.GetChatClient("gpt-5.1");
 
-        IList<McpClientTool> tools = await _mcpClient.GetAvailableTools(cancellationToken);
-        McpClientTool tool = tools.First();
+        //TODO: исправить что именно наследник дает дженерик результат
+        IList<McpClientTool> tools = await _forecastMcpClient.GetAvailableTools(cancellationToken);
 
-        ChatCompletionOptions options = ConfigureOptions(tool);
+        ChatCompletionOptions options = ConfigureOptions(tools);
 
         var messages = new List<ChatMessage>
         {
@@ -78,26 +82,45 @@ public class OpenAiClient : IOpenAiClient
 
     private async Task<string> SelectRequiredMethod(ChatToolCall call, CancellationToken cancellationToken)
     {
+        var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
         return call.FunctionName switch
         {
-            "get_forecast" => await _mcpClient.CallForecast(55.75, 37.62, cancellationToken),
+            "get_forecast" => await _forecastMcpClient.GetForecast(
+                JsonSerializer.Deserialize<GetForecastRequestDto>(call.FunctionArguments, serializerOptions),
+                cancellationToken),
+            "get_reminders" => await _reminderMcpClient.GetReminders(
+                JsonSerializer.Deserialize<GetRemindersRequestDto>(call.FunctionArguments, serializerOptions),
+                cancellationToken),
+            "add_reminder" => await _reminderMcpClient.AddReminder(
+                JsonSerializer.Deserialize<AddReminderRequestDto>(call.FunctionArguments, serializerOptions),
+                cancellationToken),
         };
     }
 
-    private static ChatCompletionOptions ConfigureOptions(McpClientTool tool)
+    private static ChatCompletionOptions ConfigureOptions(IList<McpClientTool> tools)
     {
-        var functionTool = ChatTool.CreateFunctionTool(
-            functionName: tool.Name,
-            functionDescription: tool.Description,
-            functionParameters: BinaryData.FromString($"""{tool.ProtocolTool.InputSchema.ToString()}"""));
+        var functionTool0 = ChatTool.CreateFunctionTool(
+            functionName: tools[0].Name,
+            functionDescription: tools[0].Description,
+            functionParameters: BinaryData.FromString($"""{tools[0].ProtocolTool.InputSchema.ToString()}"""));
+
+        var functionTool1 = ChatTool.CreateFunctionTool(
+            functionName: tools[1].Name,
+            functionDescription: tools[1].Description,
+            functionParameters: BinaryData.FromString($"""{tools[1].ProtocolTool.InputSchema.ToString()}"""));
+
+        var functionTool2 = ChatTool.CreateFunctionTool(
+            functionName: tools[2].Name,
+            functionDescription: tools[2].Description,
+            functionParameters: BinaryData.FromString($"""{tools[2].ProtocolTool.InputSchema.ToString()}"""));
 
         return new ChatCompletionOptions()
         {
-            //TODO: прокинуть поляхи
-            //Temperature = requestDto.Temperature,
-            //ResponseFormat = ChatResponseFormat.CreateJsonObjectFormat(BinaryData.FromBytes()),
-            ToolChoice = ChatToolChoice.CreateAutoChoice(),
-            Tools = { functionTool },
+            // Temperature = ,
+            // ResponseFormat = ,
+            ToolChoice = ChatToolChoice.CreateRequiredChoice(),
+            Tools = { functionTool0, functionTool1, functionTool2 }
         };
     }
 }

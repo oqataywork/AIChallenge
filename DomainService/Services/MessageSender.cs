@@ -1,7 +1,7 @@
 ﻿using Domain;
 
-using Integrations;
-using Integrations.Contracts;
+using Integrations.Ai;
+using Integrations.Ai.Contracts;
 
 namespace DomainService.Services;
 
