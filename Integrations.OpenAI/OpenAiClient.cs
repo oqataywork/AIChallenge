@@ -20,11 +20,17 @@ public class OpenAiClient : IOpenAiClient
     private readonly OpenAIClient _client;
     private readonly IForecastMcpClient _forecastMcpClient;
     private readonly IReminderMcpClient _reminderMcpClient;
+    private readonly IFileResearcherMcpClient _fileResearcherMcpClient;
 
-    public OpenAiClient(IOptions<OpenAiOptions> options, IForecastMcpClient forecastMcpClient, IReminderMcpClient reminderMcpClient)
+    public OpenAiClient(
+        IOptions<OpenAiOptions> options,
+        IForecastMcpClient forecastMcpClient,
+        IReminderMcpClient reminderMcpClient,
+        IFileResearcherMcpClient fileResearcherMcpClient)
     {
         _forecastMcpClient = forecastMcpClient;
         _reminderMcpClient = reminderMcpClient;
+        _fileResearcherMcpClient = fileResearcherMcpClient;
 
         string apiKey = options.Value.ApiKey;
         _client = new OpenAIClient(apiKey);
@@ -60,19 +66,27 @@ public class OpenAiClient : IOpenAiClient
             ChatMessage.CreateUserMessage(requestDto.Prompt)
         };
 
-        ClientResult<ChatCompletion> openAiResponse = await chatClient.CompleteChatAsync(messages, options, cancellationToken: cancellationToken);
+        ClientResult<ChatCompletion> openAiResponse =
+            await chatClient.CompleteChatAsync(messages, options, cancellationToken: cancellationToken);
 
-        if (openAiResponse.Value.FinishReason is ChatFinishReason.ToolCalls)
+        while (openAiResponse.Value.FinishReason == ChatFinishReason.ToolCalls)
         {
             messages.Add(ChatMessage.CreateAssistantMessage(openAiResponse.Value.ToolCalls));
 
             foreach (ChatToolCall call in openAiResponse.Value.ToolCalls)
             {
                 string result = await SelectRequiredMethod(call, cancellationToken);
-                messages.Add(ChatMessage.CreateToolMessage(call.Id, result));
+
+                messages.Add(
+                    ChatMessage.CreateToolMessage(
+                        toolCallId: call.Id,
+                        content: result));
             }
 
-            openAiResponse = await chatClient.CompleteChatAsync(messages, cancellationToken: cancellationToken);
+            openAiResponse = await chatClient.CompleteChatAsync(
+                messages,
+                options,
+                cancellationToken: cancellationToken);
         }
 
         var aiResponse = JsonSerializer.Deserialize<AiResponseDto>(openAiResponse.Value.Content.First().Text);
@@ -95,32 +109,37 @@ public class OpenAiClient : IOpenAiClient
             "add_reminder" => await _reminderMcpClient.AddReminder(
                 JsonSerializer.Deserialize<AddReminderRequestDto>(call.FunctionArguments, serializerOptions),
                 cancellationToken),
+            "read_file" => await _fileResearcherMcpClient.ReadFile(
+                JsonSerializer.Deserialize<ReadFileRequestDto>(call.FunctionArguments, serializerOptions),
+                cancellationToken),
+            "create_file" => await _fileResearcherMcpClient.CreateFile(
+                JsonSerializer.Deserialize<CreateFileRequestDto>(call.FunctionArguments, serializerOptions),
+                cancellationToken),
         };
     }
 
     private static ChatCompletionOptions ConfigureOptions(IList<McpClientTool> tools)
     {
-        var functionTool0 = ChatTool.CreateFunctionTool(
-            functionName: tools[0].Name,
-            functionDescription: tools[0].Description,
-            functionParameters: BinaryData.FromString($"""{tools[0].ProtocolTool.InputSchema.ToString()}"""));
-
-        var functionTool1 = ChatTool.CreateFunctionTool(
-            functionName: tools[1].Name,
-            functionDescription: tools[1].Description,
-            functionParameters: BinaryData.FromString($"""{tools[1].ProtocolTool.InputSchema.ToString()}"""));
-
-        var functionTool2 = ChatTool.CreateFunctionTool(
-            functionName: tools[2].Name,
-            functionDescription: tools[2].Description,
-            functionParameters: BinaryData.FromString($"""{tools[2].ProtocolTool.InputSchema.ToString()}"""));
+        ChatTool functionTool0 = GetToolByIndex(tools, 0);
+        ChatTool functionTool1 = GetToolByIndex(tools, 1);
+        ChatTool functionTool2 = GetToolByIndex(tools, 2);
+        ChatTool functionTool3 = GetToolByIndex(tools, 3);
+        ChatTool functionTool4 = GetToolByIndex(tools, 4);
 
         return new ChatCompletionOptions()
         {
             // Temperature = ,
             // ResponseFormat = ,
-            ToolChoice = ChatToolChoice.CreateRequiredChoice(),
-            Tools = { functionTool0, functionTool1, functionTool2 }
+            ToolChoice = ChatToolChoice.CreateAutoChoice(),
+            Tools = { functionTool0, functionTool1, functionTool2, functionTool3, functionTool4 }
         };
+    }
+
+    private static ChatTool GetToolByIndex(IList<McpClientTool> tools, int index)
+    {
+        return ChatTool.CreateFunctionTool(
+            functionName: tools[index].Name,
+            functionDescription: tools[index].Description,
+            functionParameters: BinaryData.FromString($"""{tools[index].ProtocolTool.InputSchema.ToString()}"""));
     }
 }

@@ -35,5 +35,6 @@ public static class ServiceCollectionExtensions
         // Регистрируем свою обёртку
         services.AddScoped<IForecastMcpClient, ForecastMcpClient>();
         services.AddScoped<IReminderMcpClient, ReminderMcpClient>();
+        services.AddScoped<IFileResearcherMcpClient, FileResearcherMcpClient>();
     }
 }

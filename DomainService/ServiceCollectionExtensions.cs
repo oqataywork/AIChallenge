@@ -13,6 +13,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<MessageSender>();
         services.AddScoped<IPromptBuilder, PromptBuilder>();
 
-        services.AddHostedService<RemindersSummaryHostedService>();
+        // services.AddHostedService<RemindersSummaryHostedService>();
     }
 }
