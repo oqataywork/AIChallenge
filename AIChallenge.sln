@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{73CE00
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integrations.Ollama", "Integrations.Ollama\Integrations.Ollama.csproj", "{47967857-607C-4577-83DD-A1998ACD2BFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,7 @@ Global
 		{9164CA35-805A-4344-B025-034D8BC60ECA} = {F5EF8F04-1823-4A36-AF9C-10753B486D18}
 		{0AB8A416-6033-40C7-A9EB-4129518E7EBA} = {2EEE975D-9F92-4564-8728-13DE77BF2FF6}
 		{C1C99DFD-2986-4AF7-9E69-BB55FDA0A788} = {C0AE50D3-59AC-4877-9FE7-020AEB0544DE}
+		{47967857-607C-4577-83DD-A1998ACD2BFB} = {C0AE50D3-59AC-4877-9FE7-020AEB0544DE}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8C8751DF-4273-4835-96A6-8A6E80A93958}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -93,5 +96,9 @@ Global
 		{C1C99DFD-2986-4AF7-9E69-BB55FDA0A788}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1C99DFD-2986-4AF7-9E69-BB55FDA0A788}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1C99DFD-2986-4AF7-9E69-BB55FDA0A788}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47967857-607C-4577-83DD-A1998ACD2BFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47967857-607C-4577-83DD-A1998ACD2BFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47967857-607C-4577-83DD-A1998ACD2BFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47967857-607C-4577-83DD-A1998ACD2BFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -6,4 +6,5 @@ public record SendMessageRequestInternal(
     string UserMessage,
     bool WithContext,
     ModelType ModelType,
-    double Temperature);
+    double Temperature,
+    bool UseRag);

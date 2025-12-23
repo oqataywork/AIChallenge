@@ -6,6 +6,7 @@ using Infrastructure;
 
 using Integrations.DeepSeek;
 using Integrations.OgMcpClient;
+using Integrations.Ollama;
 using Integrations.OpenAI;
 
 using Npgsql;
@@ -49,6 +50,7 @@ public class Startup
         services.AddOgMcpClient();
         services.AddDeepSeek();
         services.AddOpenAi();
+        services.AddOllama();
     }
 
     public void Configure(WebApplication app)

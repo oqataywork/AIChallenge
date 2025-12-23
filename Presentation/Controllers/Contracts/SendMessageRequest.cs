@@ -6,4 +6,6 @@ public class SendMessageRequest
     public bool WithContext { get; set; }
     public string Model { get; set; }
     public double Temperature { get; set; }
+
+    public bool UseRag { get; set; }
 }

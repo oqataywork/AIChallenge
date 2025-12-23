@@ -23,6 +23,7 @@ public sealed class RemindersSummaryHostedService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+
         while (!stoppingToken.IsCancellationRequested)
         {
             try
@@ -31,7 +32,8 @@ public sealed class RemindersSummaryHostedService : BackgroundService
                     UserMessage: "Сделай саммари напоминаний на 19.12.2025. Ответ дай на английском",
                     WithContext: true,
                     ModelType: ModelType.OpenAiGpt5Dot1,
-                    Temperature: 0.7);
+                    Temperature: 0.7,
+                    false);
 
                 AiResponse result = await _handler.Handle(request, stoppingToken);
 

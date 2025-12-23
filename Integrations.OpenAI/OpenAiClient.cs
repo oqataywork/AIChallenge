@@ -66,32 +66,41 @@ public class OpenAiClient : IOpenAiClient
             ChatMessage.CreateUserMessage(requestDto.Prompt)
         };
 
-        ClientResult<ChatCompletion> openAiResponse =
-            await chatClient.CompleteChatAsync(messages, options, cancellationToken: cancellationToken);
+        ClientResult<ChatCompletion> openAiResponse = await chatClient.CompleteChatAsync(messages, options, cancellationToken: cancellationToken);
 
         while (openAiResponse.Value.FinishReason == ChatFinishReason.ToolCalls)
         {
-            messages.Add(ChatMessage.CreateAssistantMessage(openAiResponse.Value.ToolCalls));
-
-            foreach (ChatToolCall call in openAiResponse.Value.ToolCalls)
-            {
-                string result = await SelectRequiredMethod(call, cancellationToken);
-
-                messages.Add(
-                    ChatMessage.CreateToolMessage(
-                        toolCallId: call.Id,
-                        content: result));
-            }
-
-            openAiResponse = await chatClient.CompleteChatAsync(
-                messages,
-                options,
-                cancellationToken: cancellationToken);
+            openAiResponse = await ProcessToolCall(messages, chatClient, options, openAiResponse, cancellationToken);
         }
 
         var aiResponse = JsonSerializer.Deserialize<AiResponseDto>(openAiResponse.Value.Content.First().Text);
 
         return aiResponse;
+    }
+
+    private async Task<ClientResult<ChatCompletion>> ProcessToolCall(
+        List<ChatMessage> messages,
+        ChatClient chatClient,
+        ChatCompletionOptions options,
+        ClientResult<ChatCompletion> openAiResponse,
+        CancellationToken cancellationToken)
+    {
+        messages.Add(ChatMessage.CreateAssistantMessage(openAiResponse.Value.ToolCalls));
+
+        foreach (ChatToolCall call in openAiResponse.Value.ToolCalls)
+        {
+            string result = await SelectRequiredMethod(call, cancellationToken);
+
+            messages.Add(
+                ChatMessage.CreateToolMessage(
+                    toolCallId: call.Id,
+                    content: result));
+        }
+
+        return await chatClient.CompleteChatAsync(
+            messages,
+            options,
+            cancellationToken: cancellationToken);
     }
 
     private async Task<string> SelectRequiredMethod(ChatToolCall call, CancellationToken cancellationToken)
@@ -130,7 +139,7 @@ public class OpenAiClient : IOpenAiClient
         {
             // Temperature = ,
             // ResponseFormat = ,
-            ToolChoice = ChatToolChoice.CreateAutoChoice(),
+            ToolChoice = ChatToolChoice.CreateNoneChoice(),
             Tools = { functionTool0, functionTool1, functionTool2, functionTool3, functionTool4 }
         };
     }

@@ -12,6 +12,7 @@
         <ProjectReference Include="..\Infrastructure\Infrastructure.csproj"/>
         <ProjectReference Include="..\Integrations.DeepSeek\Integrations.DeepSeek.csproj"/>
         <ProjectReference Include="..\Integrations.OgMcpClient\Integrations.OgMcpClient.csproj"/>
+        <ProjectReference Include="..\Integrations.Ollama\Integrations.Ollama.csproj" />
         <ProjectReference Include="..\Integrations.OpenAI\Integrations.OpenAI.csproj"/>
     </ItemGroup>
 
