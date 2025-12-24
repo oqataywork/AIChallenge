@@ -33,7 +33,8 @@ public sealed class RemindersSummaryHostedService : BackgroundService
                     WithContext: true,
                     ModelType: ModelType.OpenAiGpt5Dot1,
                     Temperature: 0.7,
-                    false);
+                    false,
+                    0);
 
                 AiResponse result = await _handler.Handle(request, stoppingToken);
 

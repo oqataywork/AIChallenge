@@ -7,4 +7,5 @@ public record SendMessageRequestInternal(
     bool WithContext,
     ModelType ModelType,
     double Temperature,
-    bool UseRag);
+    bool UseRag,
+    float SimilarityThreshold);

@@ -8,4 +8,6 @@ public class SendMessageRequest
     public double Temperature { get; set; }
 
     public bool UseRag { get; set; }
+
+    public float SimilarityThreshold { get; set; }
 }

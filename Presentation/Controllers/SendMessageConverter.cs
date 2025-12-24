@@ -15,7 +15,8 @@ public static class SendMessageConverter
             message.WithContext,
             ConvertModel(message.Model),
             message.Temperature,
-            message.UseRag);
+            message.UseRag,
+            message.SimilarityThreshold);
     }
 
     public static SendMessageResponse Convert(AiResponse response)

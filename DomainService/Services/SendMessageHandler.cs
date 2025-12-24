@@ -46,7 +46,7 @@ public class SendMessageHandler
 
         if (request.UseRag)
         {
-            List<AiContext> ragContext = await GetRagContext(request.UserMessage, cancellationToken);
+            List<AiContext> ragContext = await GetRagContext(request.UserMessage, request.SimilarityThreshold, cancellationToken);
 
             context.AddRange(ragContext);
         }
@@ -62,7 +62,7 @@ public class SendMessageHandler
         return response;
     }
 
-    private async Task<List<AiContext>> GetRagContext(string question, CancellationToken ct)
+    private async Task<List<AiContext>> GetRagContext(string question, float requestSimilarityThreshold, CancellationToken ct)
     {
         if (!File.Exists(EMBEDDINGS_PATH))
         {
@@ -73,16 +73,15 @@ public class SendMessageHandler
 
         try
         {
-            // 1. ЧТЕНИЕ JSON
             string json = await File.ReadAllTextAsync(EMBEDDINGS_PATH, ct);
             List<Chunk> chunks = JsonSerializer.Deserialize<List<Chunk>>(
                 json,
                 new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
-                }) ?? new();
+                }) ?? [];
 
-            Console.WriteLine($"📖 Загружено {chunks.Count} чанков");
+            Console.WriteLine($"📖 Downloaded {chunks.Count} chunks");
 
             // 2. EMBEDDING вопроса через Ollama
             float[] questionEmbedding = await _ollamaClient.GetEmbedding(question, ct);
@@ -95,12 +94,12 @@ public class SendMessageHandler
                         Chunk = chunk,
                         Score = CosineSimilarity(chunk.Embedding, questionEmbedding)
                     })
-                .Where(x => x.Score > 0.2f) // фильтр релевантности
+                .Where(x => x.Score > requestSimilarityThreshold)
                 .OrderByDescending(x => x.Score)
                 .Take(5)
                 .ToList();
 
-            Console.WriteLine($"🔍 Найдено {relevantChunks.Count} релевантных чанков (top: {relevantChunks.FirstOrDefault()?.Score:F3})");
+            Console.WriteLine($"🔍 Found {relevantChunks.Count} relevant chunks (top: {relevantChunks.FirstOrDefault()?.Score:F3})");
 
             // 4. AiContext для промпта
             return relevantChunks.Select(
@@ -111,7 +110,7 @@ public class SendMessageHandler
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ RAG ошибка: {ex.Message}");
+            Console.WriteLine($"❌ RAG exception: {ex.Message}");
 
             return await _contextRepository.GetAllContext(ct);
         }
