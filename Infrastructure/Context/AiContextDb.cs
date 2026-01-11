@@ -13,9 +13,12 @@ public class AiContextDb
         Answer = answer;
     }
 
+    public AiContextDb()
+    { }
+
     public AiContext ToDomain()
     {
-        return new AiContext(Question, Answer);
+        return new AiContext(Question, Answer, ResponseSource.Db);
     }
 
     public static AiContextDb FromDomain(string question, string answer)

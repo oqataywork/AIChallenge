@@ -82,6 +82,7 @@ internal sealed class PromptBuilder : IPromptBuilder
         + "Не добавляй лишних слов. Только JSON из указанного формата."
         + "В Question укажи текст сообщения на который отвечаешь. "
         + $"Текст сообщения в запросе находится перед символами {Separator} "
+        + "В ResponseSource запиши или Db или Rag или Model. Тебе прилетит контекст. У контекста указан источник, его же и укажи. Если ни один не подходит, то укажи Model"
         + "В Answer запиши ответ полученный из твоих вычислений. ";
 
     private const string FinishChatPrompt =
@@ -93,6 +94,7 @@ internal sealed class PromptBuilder : IPromptBuilder
     private const string ResponseFormat = "{"
         + "\"Question\":\"string\","
         + "\"Answer\":\"string\","
+        + "\"ResponseSource\":\"string\","
         + "\"IsFinished\": bool"
         + "}";
 
@@ -111,6 +113,7 @@ internal sealed class PromptBuilder : IPromptBuilder
         {
             string q = ctx.Question.Trim();
             string a = ctx.Answer.Trim();
+            var s = ctx.ResponseSource.ToString();
 
             if (!string.IsNullOrWhiteSpace(q))
             {
@@ -122,6 +125,7 @@ internal sealed class PromptBuilder : IPromptBuilder
                 sb.AppendLine($"A: {a}");
             }
 
+            sb.AppendLine($"Response Source: {s}");
             sb.AppendLine("---");
         }
 

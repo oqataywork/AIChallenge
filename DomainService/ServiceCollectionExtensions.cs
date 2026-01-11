@@ -12,6 +12,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<SendMessageHandler>();
         services.AddScoped<MessageSender>();
         services.AddScoped<IPromptBuilder, PromptBuilder>();
+        services.AddScoped<IRagContextService, RagContextService>();
 
         // services.AddHostedService<RemindersSummaryHostedService>();
     }

@@ -6,5 +6,6 @@ public class AiResponseDto
 
     //TODO: сделать отдельное поле для сжатого ответа
     public string Answer { get; set; }
+    public string ResponseSource { get; set; }
     public bool IsFinished { get; set; }
 }

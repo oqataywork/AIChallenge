@@ -21,7 +21,7 @@ public static class SendMessageConverter
 
     public static SendMessageResponse Convert(AiResponse response)
     {
-        return new SendMessageResponse(response.Answer, response.IsFinished);
+        return new SendMessageResponse(response.Answer, response.IsFinished, response.ResponseSource.ToString());
     }
 
     private static ModelType ConvertModel(string model)
