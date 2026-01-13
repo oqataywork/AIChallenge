@@ -139,7 +139,7 @@ public class OpenAiClient : IOpenAiClient
         {
             // Temperature = ,
             // ResponseFormat = ,
-            ToolChoice = ChatToolChoice.CreateNoneChoice(),
+            ToolChoice = ChatToolChoice.CreateAutoChoice(),
             Tools = { functionTool0, functionTool1, functionTool2, functionTool3, functionTool4 }
         };
     }
